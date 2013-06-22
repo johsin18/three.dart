@@ -5323,6 +5323,10 @@ class WebGLRenderer implements Renderer {
 
 				_gl.uniformMatrix2fv( location, false, value );
 
+			} else if ( type == "m3") { // single THREE.Matrix3
+
+				_gl.uniformMatrix3fv( location, false, value );
+
 			} else if ( type == "m4") { // single THREE.Matrix4
 
 				_gl.uniformMatrix4fv( location, false, value );
