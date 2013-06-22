@@ -1702,6 +1702,10 @@ class Uniform<T> {
 
       }
 
+    } else if ( type == "m2") { // single THREE.Matrix2
+
+      _array = (_value as Matrix2).storage;
+
     } else if ( type == "m4") { // single THREE.Matrix4
 
       _array = (_value as Matrix4).storage;
@@ -1762,8 +1766,11 @@ class Uniform<T> {
 
   factory Uniform.vector2v(List<Vector2> vectors) => new Uniform<List<Vector2>>("v2v", vectors);
 
+  factory Uniform.vector2(Vector2 v) => new Uniform<Vector2>("v2", v);
   factory Uniform.vector3(double x, double y, double z) => new Uniform<Vector3>("v3", new Vector3(x, y, z));
   factory Uniform.vector4(double x, double y, num z, double w) => new Uniform<Vector4>("v4", new Vector4(x, y, z, w));
+
+  factory Uniform.matrix2(Matrix2 m) => new Uniform<Matrix2>("m2", m);
 
   factory Uniform.matrix4v(List<Matrix4> m) => new Uniform<List<Matrix4>>("m4v", m);
 }
