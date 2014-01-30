@@ -107,7 +107,7 @@ get ShaderChunk  {
 
       "#ifdef DOUBLE_SIDED",
 
-        "float flipNormal = ( -1.0 + 2.0 * float( gl_FrontFacing ) );",
+        "float flipNormal = ( -1.0 + 2.0 * float( 1.0 ) );",
         "vec4 cubeColor = textureCube( envMap, flipNormal * vec3( flipEnvMap * reflectVec.x, reflectVec.yz ) );",
 
       "#else",
@@ -857,7 +857,7 @@ get ShaderChunk  {
 
     "#ifdef DOUBLE_SIDED",
 
-      "normal = normal * ( -1.0 + 2.0 * float( gl_FrontFacing ) );",
+      "normal = normal * ( -1.0 + 2.0 * float( 1.0 ) );",
 
     "#endif",
 
@@ -2388,7 +2388,7 @@ get ShaderLib  {
           //"float isFront = float( gl_FrontFacing );",
           //"gl_FragColor.xyz *= isFront * vLightFront + ( 1.0 - isFront ) * vLightBack;",
 
-          "if ( gl_FrontFacing )",
+          "if ( true )",
             "gl_FragColor.xyz *= vLightFront;",
           "else",
             "gl_FragColor.xyz *= vLightBack;",
