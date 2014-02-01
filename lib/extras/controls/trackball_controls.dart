@@ -447,7 +447,7 @@ class TrackballControls extends EventEmitter {
 
       }
 
-      _zoomStart.y += ( 1 / delta ) * 0.05;
+      _zoomStart.y -= ( 1 / delta ) * 0.2;
 
     }
 
