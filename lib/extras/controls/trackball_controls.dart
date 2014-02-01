@@ -44,7 +44,7 @@ class TrackballControls extends EventEmitter {
   Vector3 _eye;
 
   Vector3 _rotateStart, _rotateEnd;
-  Vector2 _zoomStart, _zoomEnd;
+  double _zoomStartY, _zoomEndY;
   Vector2 _panStart, _panEnd;
   Vector3 lastPosition;
 
@@ -95,8 +95,7 @@ class TrackballControls extends EventEmitter {
     _rotateStart = new Vector3.zero();
     _rotateEnd = new Vector3.zero();
 
-    _zoomStart = new Vector2.zero();
-    _zoomEnd = new Vector2.zero();
+    _zoomStartY = _zoomEndY = 0.0;
 
     _panStart = new Vector2.zero();
     _panEnd = new Vector2.zero();
@@ -135,7 +134,7 @@ class TrackballControls extends EventEmitter {
       dispatchEvent(event);
     }
 
-    getMouseOnScreen( clientX, clientY )
+    Vector2 getMouseOnScreen( clientX, clientY )
       => new Vector2(
           ( clientX - screen.left ) / screen.width,
           ( clientY - screen.top ) / screen.height
@@ -218,7 +217,7 @@ class TrackballControls extends EventEmitter {
 
     zoomCamera() {
 
-      var factor = 1.0 + ( _zoomEnd.y - _zoomStart.y ) * zoomSpeed;
+      var factor = 1.0 + ( _zoomEndY - _zoomStartY ) * zoomSpeed;
 
       if ( factor != 1.0 && factor > 0.0 ) {
 
@@ -226,11 +225,11 @@ class TrackballControls extends EventEmitter {
 
         if ( staticMoving ) {
 
-          _zoomStart.setFrom(_zoomEnd);
+          _zoomStartY = _zoomEndY;
 
         } else {
 
-          _zoomStart.y += ( _zoomEnd.y - _zoomStart.y ) * this.dynamicDampingFactor;
+          _zoomStartY += ( _zoomEndY - _zoomStartY ) * this.dynamicDampingFactor;
 
         }
 
@@ -378,8 +377,8 @@ class TrackballControls extends EventEmitter {
 
       } else if ( _state == STATE.ZOOM && !noZoom ) {
 
-        _zoomStart = getMouseOnScreen( event.client.x, event.client.y );
-        _zoomEnd = _zoomStart;
+        _zoomStartY = getMouseOnScreen( event.client.x, event.client.y ).y;
+        _zoomEndY = _zoomStartY;
 
       } else if ( _state == STATE.PAN && !noPan ) {
 
@@ -403,7 +402,7 @@ class TrackballControls extends EventEmitter {
 
       } else if ( _state == STATE.ZOOM && !noZoom ) {
 
-        _zoomEnd = getMouseOnScreen( event.client.x, event.client.y );
+        _zoomEndY = getMouseOnScreen( event.client.x, event.client.y ).y;
 
       } else if ( _state == STATE.PAN && !noPan ) {
 
@@ -447,7 +446,7 @@ class TrackballControls extends EventEmitter {
 
       }
 
-      _zoomStart.y -= ( 1 / delta ) * 0.2;
+      _zoomStartY -= ( 1 / delta ) * 0.2;
 
     }
 
@@ -463,7 +462,7 @@ class TrackballControls extends EventEmitter {
           _rotateStart = _rotateEnd = getMouseProjectionOnBall( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
           break;
         case 2:
-          _zoomStart = _zoomEnd = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
+          _zoomStartY = _zoomEndY = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y ).y;
           break;
         case 3:
           _panStart = _panEnd = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
@@ -485,7 +484,7 @@ class TrackballControls extends EventEmitter {
           _rotateEnd = getMouseProjectionOnBall( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
           break;
         case 2:
-          _zoomEnd = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
+          _zoomEndY = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y ).y;
           break;
         case 3:
           _panEnd = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
