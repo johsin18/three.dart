@@ -45,6 +45,7 @@ class TrackballControls extends EventEmitter {
 
   Vector3 _rotateStart, _rotateEnd;
   double _zoomStartY, _zoomEndY;
+  double _pinchStartDistance, _pinchEndDistance;
   Vector2 _panStart, _panEnd;
   Vector3 lastPosition;
 
@@ -65,7 +66,7 @@ class TrackballControls extends EventEmitter {
     screen = new Math.Rectangle( 0, 0, 0, 0 );
 
     rotateSpeed = 1.0;
-    zoomSpeed = 1.2;
+    zoomSpeed = 1.0;
     panSpeed = 0.3;
 
     noRotate = false;
@@ -96,6 +97,7 @@ class TrackballControls extends EventEmitter {
     _rotateEnd = new Vector3.zero();
 
     _zoomStartY = _zoomEndY = 0.0;
+    _pinchStartDistance = _pinchEndDistance = 0.0;
 
     _panStart = new Vector2.zero();
     _panEnd = new Vector2.zero();
@@ -217,7 +219,7 @@ class TrackballControls extends EventEmitter {
 
     zoomCamera() {
 
-      var factor = 1.0 + ( _zoomEndY - _zoomStartY ) * zoomSpeed;
+      var factor = 1.0 + ( ( _zoomEndY - _zoomStartY ) - ( _pinchEndDistance - _pinchStartDistance )) * zoomSpeed;
 
       if ( factor != 1.0 && factor > 0.0 ) {
 
@@ -232,6 +234,8 @@ class TrackballControls extends EventEmitter {
           _zoomStartY += ( _zoomEndY - _zoomStartY ) * this.dynamicDampingFactor;
 
         }
+
+        _pinchStartDistance = _pinchEndDistance;
 
       }
 
@@ -462,7 +466,9 @@ class TrackballControls extends EventEmitter {
           _rotateStart = _rotateEnd = getMouseProjectionOnBall( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
           break;
         case 2:
-          _zoomStartY = _zoomEndY = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y ).y;
+          _pinchStartDistance =
+            (getMouseOnScreen( event.touches[ 1 ].page.x, event.touches[ 1 ].page.y ) -
+             getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y )).length;
           break;
         case 3:
           _panStart = _panEnd = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
@@ -484,7 +490,9 @@ class TrackballControls extends EventEmitter {
           _rotateEnd = getMouseProjectionOnBall( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
           break;
         case 2:
-          _zoomEndY = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y ).y;
+          _pinchEndDistance =
+             (getMouseOnScreen( event.touches[ 1 ].page.x, event.touches[ 1 ].page.y ) -
+              getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y )).length;
           break;
         case 3:
           _panEnd = getMouseOnScreen( event.touches[ 0 ].page.x, event.touches[ 0 ].page.y );
